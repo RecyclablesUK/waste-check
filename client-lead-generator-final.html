@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Waste Check">
+<meta name="theme-color" content="#2E7D32">
+<title>Recyclables UK - Free Waste Assessment</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;padding:8px;min-height:100vh}
+.container{max-width:480px;margin:0 auto;background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.1);overflow:hidden}
+.header{background:#2E7D32;color:#fff;padding:24px 20px;text-align:center}
+.header h1{font-size:22px;font-weight:700;margin-bottom:6px}
+.header p{font-size:14px;opacity:0.9}
+.intro{padding:20px;background:#E8F5E9;text-align:center}
+.intro h2{font-size:16px;color:#1B5E20;margin-bottom:8px}
+.intro p{font-size:13px;color:#33691E;line-height:1.5}
+.section{padding:16px 20px;border-bottom:1px solid #e8e8e8}
+.section-title{font-size:13px;font-weight:700;color:#2E7D32;text-transform:uppercase;margin-bottom:14px;letter-spacing:0.5px}
+.row{display:flex;align-items:center;margin-bottom:14px;gap:10px}
+.label{flex:1;font-size:15px;color:#333;font-weight:500}
+.input-wrap{flex:0 0 150px}
+input,select{width:100%;padding:12px;border:2px solid #ddd;border-radius:10px;font-size:15px;background:#fff;font-weight:600;color:#333}
+input:focus,select:focus{outline:none;border-color:#2E7D32}
+.material-row{background:#f9fafb;padding:12px;border-radius:10px;margin-bottom:10px}
+.material-row .row{margin-bottom:8px}
+.material-row .row:last-child{margin-bottom:0}
+.material-name{font-size:14px;font-weight:600;color:#555}
+.material-hint{font-size:12px;color:#888}
+.calc-btn{display:block;width:100%;padding:16px;background:#2E7D32;color:#fff;border:none;border-radius:10px;font-size:17px;font-weight:700;margin-top:8px;cursor:pointer;letter-spacing:0.5px}
+.calc-btn:active{background:#1B5E20}
+.results{padding:20px;background:#f9fafb}
+.result-card{background:#fff;border-radius:12px;padding:20px;margin-bottom:12px;border-left:4px solid #2E7D32;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.result-card h3{font-size:13px;color:#888;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px}
+.result-big{font-size:22px;font-weight:700;color:#2E7D32;margin-bottom:6px}
+.result-note{font-size:13px;color:#666;line-height:1.5}
+.material-summary{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.material-pill{background:#E8F5E9;padding:8px 14px;border-radius:20px;font-size:13px;font-weight:600;color:#1B5E20}
+.material-pill.plastic{background:#E3F2FD;color:#1565C0}
+.material-pill.other{background:#FFF3E0;color:#E65100}
+.material-pill.baled{background:#C6EFCE;color:#006100}
+.material-pill.loose{background:#FFEB9C;color:#9C5700}
+.cta-section{padding:20px;text-align:center}
+.cta-green{background:#C6EFCE;color:#1B5E20;padding:20px;border-radius:12px;margin-bottom:16px}
+.cta-green h3{font-size:18px;margin-bottom:10px}
+.cta-green p{font-size:14px;line-height:1.5;margin-bottom:4px}
+.phone-btn{display:inline-block;background:#2E7D32;color:#fff;padding:16px 32px;border-radius:50px;font-size:18px;font-weight:700;text-decoration:none;margin:8px 0;box-shadow:0 4px 12px rgba(46,125,50,0.3)}
+.phone-btn:active{background:#1B5E20}
+.email-btn{display:inline-block;background:#fff;color:#2E7D32;padding:14px 28px;border-radius:50px;font-size:15px;font-weight:600;text-decoration:none;border:2px solid #2E7D32;margin-top:8px}
+.disclaimer{font-size:11px;color:#999;text-align:center;padding:16px 20px;background:#f5f5f5;line-height:1.5}
+.hidden{display:none}
+@media(max-width:400px){
+.row{flex-direction:column;align-items:flex-start;gap:6px}
+.input-wrap{flex:0 0 auto;width:100%}
+.header h1{font-size:18px}
+.result-big{font-size:20px}
+.material-summary{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>Recyclables UK</h1>
+<p>Free Waste Collection Assessment</p>
+</div>
+
+<div class="intro">
+<h2>What Waste Do You Produce?</h2>
+<p>Tell us the types and weights of your recyclable waste. We will check if your mix works for our part-load collection service. We work around your schedule and site space — no need to fill a trailer. We collect when you need us, even a single pallet.</p>
+</div>
+
+<div class="section">
+<div class="section-title">Your Location</div>
+<div class="row">
+<span class="label">Where are you based?</span>
+<div class="input-wrap">
+<select id="zone">
+<option value="" disabled selected>Choose area</option>
+<option value="1">North East</option>
+<option value="A">Birmingham</option>
+<option value="A1">Birmingham Central</option>
+<option value="B1">Midlands</option>
+<option value="B2">Manchester / Leeds</option>
+<option value="B3">West England</option>
+<option value="C1">East Anglia</option>
+<option value="D">South West</option>
+<option value="E">London</option>
+<option value="F1">Wales</option>
+<option value="F2">Wales / Scotland</option>
+<option value="F3">Cornwall</option>
+<option value="W">Reading</option>
+<option value="W2">Essex</option>
+<option value="X">West London</option>
+<option value="X2">Kent</option>
+<option value="Y">South Coast</option>
+<option value="Z">Surrey</option>
+<option value="G">Scotland Central</option>
+<option value="H">Scotland North</option>
+<option value="I">Scotland Highlands</option>
+<option value="V">Perthshire</option>
+<option value="M">Northern Ireland</option>
+<option value="P">Isle of Wight</option>
+<option value="U">Cornwall Remote</option>
+</select>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Your Materials</div>
+
+<div class="row">
+<span class="label">
+<span class="material-name">Is your material baled?</span>
+<span class="material-hint">Baled = compacted into blocks / wire tied</span>
+</span>
+<div class="input-wrap">
+<select id="isBaled">
+<option value="yes">Yes — all baled</option>
+<option value="some">Some baled, some loose</option>
+<option value="no" selected>No — all loose</option>
+<option value="unsure">Not sure</option>
+</select>
+</div>
+</div>
+
+<div class="material-row">
+<div class="row">
+<span class="label">
+<span class="material-name">Cardboard</span>
+<span class="material-hint">Boxes, packaging, sheets</span>
+</span>
+<div class="input-wrap"><input type="number" id="cardKg" value="600" min="0" placeholder="kg"></div>
+</div>
+</div>
+
+<div class="material-row">
+<div class="row">
+<span class="label">
+<span class="material-name">Plastic / LDPE</span>
+<span class="material-hint">Shrink wrap, film, bags</span>
+</span>
+<div class="input-wrap"><input type="number" id="ldpeKg" value="300" min="0" placeholder="kg"></div>
+</div>
+</div>
+
+<div class="material-row">
+<div class="row">
+<span class="label">
+<span class="material-name">Other Material</span>
+<span class="material-hint">Mixed plastic, pallets, etc</span>
+</span>
+<div class="input-wrap"><input type="number" id="otherKg" value="0" min="0" placeholder="kg"></div>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Collection Details</div>
+<div class="row">
+<span class="label">How many pallets per collection?</span>
+<div class="input-wrap"><input type="number" id="numPallets" value="3" min="1" placeholder="e.g. 3"></div>
+</div>
+<div class="row">
+<span class="label">How often?</span>
+<div class="input-wrap">
+<select id="frequency">
+<option value="weekly" selected>Weekly</option>
+<option value="fortnightly">Fortnightly</option>
+<option value="monthly">Monthly</option>
+<option value="ad-hoc">Ad-hoc</option>
+</select>
+</div>
+</div>
+</div>
+
+<button class="calc-btn" onclick="calculate()">CHECK IF WE CAN HELP</button>
+
+<div id="results" class="results hidden">
+<div class="result-card">
+<h3>Your Waste Assessment</h3>
+<div class="result-big" id="assessmentTitle">-</div>
+<div class="result-note" id="assessmentNote">-</div>
+<div class="material-summary" id="materialSummary"></div>
+</div>
+</div>
+
+<div id="ctaViable" class="cta-section hidden">
+<div class="cta-green">
+<h3>We can help — this looks like a good fit</h3>
+<p>Based on what you have told us, we should be able to collect your waste. We offer part-load collections from 1 pallet upwards with no minimum contract.</p>
+<p style="margin-top:8px;font-weight:600">Speak to Ian to arrange a collection:</p>
+</div>
+<a href="tel:07526201579" class="phone-btn">Call Ian: 07526 201579</a>
+<br>
+<a href="mailto:ian@recyclablesuk.co.uk" class="email-btn">Email Ian</a>
+</div>
+
+<div id="ctaMarginal" class="cta-section hidden">
+<div class="cta-green" style="background:#FFEB9C;color:#9C5700">
+<h3>Worth a conversation</h3>
+<p>Your setup may work for us, but we would need to understand a bit more about your waste and how it is stored. We can advise on the best approach.</p>
+<p style="margin-top:8px;font-weight:600">Call Ian to discuss:</p>
+</div>
+<a href="tel:07526201579" class="phone-btn" style="background:#9C5700">Call Ian: 07526 201579</a>
+<br>
+<a href="mailto:ian@recyclablesuk.co.uk" class="email-btn" style="color:#9C5700;border-color:#9C5700">Email Ian</a>
+</div>
+
+<div id="ctaCardHeavy" class="cta-section hidden">
+<div class="cta-green" style="background:#FFF3E0;color:#E65100">
+<h3>We may be able to help — let's discuss</h3>
+<p>Your waste is mostly cardboard, which can be trickier to collect in smaller volumes. We can advise on whether a baler would help you fit more material per pallet.</p>
+<p style="margin-top:8px;font-weight:600">Call Ian for advice:</p>
+</div>
+<a href="tel:07526201579" class="phone-btn" style="background:#E65100">Call Ian: 07526 201579</a>
+<br>
+<a href="mailto:ian@recyclablesuk.co.uk" class="email-btn" style="color:#E65100;border-color:#E65100">Email Ian</a>
+</div>
+
+<div id="ctaLoose" class="cta-section hidden">
+<div class="cta-green" style="background:#E3F2FD;color:#1565C0">
+<h3>We can advise on baling your waste</h3>
+<p>Loose waste takes up more space on pallets. We can help you understand whether a baler would make your collections more efficient.</p>
+<p style="margin-top:8px;font-weight:600">Call Ian to discuss baling:</p>
+</div>
+<a href="tel:07526201579" class="phone-btn" style="background:#1565C0">Call Ian: 07526 201579</a>
+<br>
+<a href="mailto:ian@recyclablesuk.co.uk" class="email-btn" style="color:#1565C0;border-color:#1565C0">Email Ian</a>
+</div>
+
+<div id="ctaSmall" class="cta-section hidden">
+<div class="cta-green" style="background:#ECEFF1;color:#455A64">
+<h3>Let's see how we can help</h3>
+<p>Current volumes are quite small for regular collection, but we can still advise. We can help you understand how to store and prepare your waste, or connect you with the right solution.</p>
+<p style="margin-top:8px;font-weight:600">Call Ian for a chat:</p>
+</div>
+<a href="tel:07526201579" class="phone-btn" style="background:#455A64">Call Ian: 07526 201579</a>
+<br>
+<a href="mailto:ian@recyclablesuk.co.uk" class="email-btn" style="color:#455A64;border-color:#455A64">Email Ian</a>
+</div>
+</div>
+
+<div class="disclaimer">
+Recyclables UK — Registered Waste Carrier.<br>
+Recycling collection specialists. Flexible collections of<br>
+cardboard, plastic and other recycling material across the UK.
+</div>
+
+<script>
+var rates={"1":25,"A":37.62,"A1":39.721,"B1":41.316,"B2":41.536,"B3":42.306,"C1":43.593,"D":50.743,"E":62.744,"F1":58.223,"F2":59.103,"F3":61.919,"P":83.765,"U":66.033,"W":46.332,"W2":49.148,"X":48.752,"X2":51.568,"Y":50.05,"Z":54.571,"G":62.821,"H":85.855,"I":89.507,"V":105.226,"M":92.532};
+
+function calculate(){
+var z=document.getElementById('zone').value;
+if(!z){alert('Please select your area');return;}
+
+var baled=document.getElementById('isBaled').value;
+var ck=parseInt(document.getElementById('cardKg').value)||0;
+var lk=parseInt(document.getElementById('ldpeKg').value)||0;
+var ok=parseInt(document.getElementById('otherKg').value)||0;
+var n=parseInt(document.getElementById('numPallets').value)||0;
+var freq=document.getElementById('frequency').value;
+
+if(n<1){alert('Please enter at least 1 pallet');return;}
+
+var totalKg=ck+lk+ok;
+var haulage=rates[z]*n;
+
+// Internal value calc (not shown to client)
+var baledMult=(baled==='yes')?1.15:(baled==='some')?1.0:0.85;
+var estValue=((ck/1000)*70+(lk/1000)*350+(ok/1000)*100)*baledMult;
+var margin=estValue-haulage;
+
+// Material mix analysis
+var ldpePct=totalKg>0?(lk/totalKg)*100:0;
+var cardPct=totalKg>0?(ck/totalKg)*100:0;
+var isPlasticRich=ldpePct>=25;
+var isCardHeavy=cardPct>=70 && ldpePct<15;
+var isLoose=baled==='no'||baled==='unsure';
+
+// Frequency multiplier
+var freqMult=freq==='weekly'?4:freq==='fortnightly'?2:freq==='monthly'?1:0.5;
+
+// Viability logic
+var isViable=margin>40 && n>=2;
+var isMarginal=margin>0 && (isPlasticRich||n>=3||baled==='yes');
+
+var title,note;
+if(isViable && baled==='yes'){
+  title="We can help — baled material is ideal";
+  note="Your waste is baled, which makes collections straightforward. We can collect promptly on a schedule that suits you.";
+} else if(isViable){
+  title="We can help — this looks like a good fit";
+  note="Based on what you have told us, we should be able to collect your waste. We offer part-load collections from 1 pallet upwards with no minimum contract.";
+} else if(isMarginal){
+  title="Worth a conversation";
+  note="Your setup may work for us, but we would need to understand a bit more about your waste and how it is stored. We can advise on the best approach.";
+} else if(isCardHeavy && isLoose){
+  title="We may be able to help — let's discuss";
+  note="Your waste is mostly cardboard and loose, which can be trickier to collect in smaller volumes. We can advise on whether a baler would help make collections more practical.";
+} else if(isCardHeavy){
+  title="We may be able to help — let's discuss";
+  note="Your waste is mostly cardboard, which can be trickier to collect in smaller volumes. We can advise on whether a baler would help you fit more material per pallet.";
+} else if(isLoose){
+  title="We can advise on baling your waste";
+  note="Loose waste takes up more space on pallets. We can help you understand whether a baler would make your collections more efficient.";
+} else {
+  title="Let's see how we can help";
+  note="Current volumes are quite small for regular collection, but we can still advise. We can help you understand how to store and prepare your waste, or connect you with the right solution.";
+}
+
+document.getElementById('assessmentTitle').textContent=title;
+document.getElementById('assessmentNote').textContent=note;
+
+var summaryHtml='';
+if(ck>0) summaryHtml+='<span class="material-pill">Cardboard: '+ck+'kg</span>';
+if(lk>0) summaryHtml+='<span class="material-pill plastic">Plastic: '+lk+'kg</span>';
+if(ok>0) summaryHtml+='<span class="material-pill other">Other: '+ok+'kg</span>';
+if(baled==='yes') summaryHtml+='<span class="material-pill baled">All Baled</span>';
+else if(baled==='some') summaryHtml+='<span class="material-pill baled">Partially Baled</span>';
+else if(baled==='no') summaryHtml+='<span class="material-pill loose">All Loose</span>';
+else summaryHtml+='<span class="material-pill loose">Unsure</span>';
+document.getElementById('materialSummary').innerHTML=summaryHtml;
+
+document.getElementById('results').classList.remove('hidden');
+document.getElementById('ctaViable').classList.add('hidden');
+document.getElementById('ctaMarginal').classList.add('hidden');
+document.getElementById('ctaCardHeavy').classList.add('hidden');
+document.getElementById('ctaLoose').classList.add('hidden');
+document.getElementById('ctaSmall').classList.add('hidden');
+
+if(isViable){
+  document.getElementById('ctaViable').classList.remove('hidden');
+} else if(isMarginal){
+  document.getElementById('ctaMarginal').classList.remove('hidden');
+} else if(isCardHeavy){
+  document.getElementById('ctaCardHeavy').classList.remove('hidden');
+} else if(isLoose){
+  document.getElementById('ctaLoose').classList.remove('hidden');
+} else {
+  document.getElementById('ctaSmall').classList.remove('hidden');
+}
+
+window.scrollTo({top:document.getElementById('results').offsetTop-20,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
